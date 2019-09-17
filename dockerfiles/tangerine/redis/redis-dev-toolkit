@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+source ./conf.sh
+
+case $1 in
+    start | 1)
+        start redis-dev
+        echo "启动 redis-dev docker服务"
+        ;;
+    stop | 2)
+        stop redis-dev
+        echo "关闭 redis-dev docker服务"
+        ;;
+    3)
+        exec_ redis-dev $2
+        ;;
+    4)
+        echo "进入 redis-dev docker服务"
+        exec_in redis-dev
+        ;;
+    5)
+        clear_container redis-dev
+        echo "清理 redis-dev docker服务"
+        ;;
+    6)
+        clear_all_container
+        echo "清理所有 docker服务"
+        ;;
+
+    *)
+        echo -e "请输入参数:\n"
+        echo "启动redis-dev服务: 1"
+        echo "关闭redis-dev服务: 2"
+        echo "进入容器redis-dev服务: 3 ls /"
+        echo "进入容器redis-dev服务: 4"
+        echo "清理容器redis-dev服务: 5"
+        echo "清理所有容器redis-dev服务: 6"
+        echo -e "-n"
+        echo -e "例如:\n"
+        echo "redis-dev-toolkit 1                    # 启动redis-dev容器服务"
+        echo "redis-dev-toolkit 2                    # 关闭redis-dev容器服务"
+        echo "redis-dev-toolkit 3 shell命令  # 进入 redis-dev容器 并执行shell命令"
+        echo "redis-dev-toolkit 4                    # 进入容器redis-dev服务: 4"
+        ;;
+esac

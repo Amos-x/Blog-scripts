@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neorj-read-replica
+  namespace: neo4j
+  labels:
+    app: neorj-read-replica
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: neorj-read-replica
+  template:
+    metadata:
+      labels:
+        app: neorj-read-replica
+    spec:
+      containers:
+      - name: neorj-read-replica
+        image: neo4j:3.5.5-enterprise
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: NEO4J_ACCEPT_LICENSE_AGREEMENT
+            value: "yes"
+          - name: NEO4J_dbms_connectors_default__advertised__address
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: NEO4J_dbms_mode
+            value: "READ_REPLICA"
+          - name: NEO4J_AUTH
+            value: "neo4j/ybl2019@neo4j"
+          - name: NEO4J_causal__clustering_discovery__type
+              value: "LIST"
+          - name: NEO4J_causal__clustering_initial__discovery__members
+            value: "neo4j-core-0.neo4j-core.neo4j.svc.cluster.local:5000,neo4j-core-1.neo4j-core.neo4j.svc.cluster.local:5000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: neorj-read-replica
+  namespace: neo4j
+spec:
+  selector:
+    app: neorj-read-replica
+  ports:
+  - protocol: TCP
+    port: 7687
+    targetPort: 7687

@@ -1,0 +1,33 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: prometheus-k8s
+  namespace: monitoring
+  annotations:
+    ingress.kubernetes.io/auth-type: basic
+    ingress.kubernetes.io/auth-secret: prometheus-web-auth
+spec:
+  rules:
+  - host: pre.prometheus.yaobili.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: prometheus-k8s
+          servicePort: 9090
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  rules:
+  - host: pre.grafana.yaobili.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: grafana
+          servicePort: 3000

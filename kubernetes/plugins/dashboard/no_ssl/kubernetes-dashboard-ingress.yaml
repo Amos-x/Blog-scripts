@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kubernetes-dashboard-basic-auth
+  namespace: kube-system
+type: Opaque
+data:
+  username:
+  password:
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: dashboard-ingress
+  namespace: kube-system
+  annotations:
+    ingress.kubernetes.io/auth-type: basic
+    ingress.kubernetes.io/auth-secret: kubernetes-dashboard-basic-auth
+spec:
+  rules:
+  - host: dashboard.k8s-pre.yaobili.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kubernetes-dashboard
+          servicePort: 80

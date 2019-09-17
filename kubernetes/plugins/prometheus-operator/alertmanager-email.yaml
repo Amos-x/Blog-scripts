@@ -1,0 +1,24 @@
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: "smtp.exmail.qq.com:465"
+  smtp_from: "wangyx@yaobili.com"
+  smtp_auth_username: "wangyx@yaobili.com"
+  smtp_auth_password: "A2018wyx"
+route:
+  group_by: [‘alertname‘, ‘cluster‘, ‘service‘]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 15m
+  receiver: team-X-mails
+  routes:
+  - match_re:
+      alertname: ^(host_cpu_usage|node_filesystem_free|host_down)$
+    receiver: team-X-mails
+    routes:
+    - match:
+        severity: critical
+      receiver: team-X-mails
+receivers:
+- name: "team-X-mails"
+  email_configs:
+  - to: "379833553@qq.com"

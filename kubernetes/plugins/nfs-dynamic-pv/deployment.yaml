@@ -1,0 +1,40 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nfs-client-provisioner
+  namespace: neo4j
+  labels:
+    app: nfs-client-provisioner
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      serviceAccount: nfs-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          image: registry.cn-shenzhen.aliyuncs.com/pandamir/nfs-clinet-provisioner
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: nfs-provisioner
+            - name: NFS_SERVER
+              value: 172.18.196.238
+            - name: NFS_PATH
+              value: /opt/nfs
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: 172.18.196.238
+            path: /opt/nfs

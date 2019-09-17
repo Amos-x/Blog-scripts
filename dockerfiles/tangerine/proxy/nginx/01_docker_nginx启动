@@ -1,0 +1,21 @@
+docker pull hub.c.163.com/library/nginx:latest
+docker run -d -p 8080:80 hub.c.163.com/library/nginx:latest
+docker ps
+
+netstat -na|grep 8080
+
+# 访问
+curl http://localhost:8080/
+
+
+输入：
+$ docker stop hub.c.163.com/library/nginx:latest 
+
+即可停止服务。
+
+如果想开启映射随机端口，那么可以输入如下命令：
+$ docker run -d -P hub.c.163.com/library/nginx:latest 
+
+后台运行(-d)、并暴露端口(-p)。
+对docker命令不熟悉的可以查看下docker的基本命令的含义。
+
